@@ -20,9 +20,12 @@ public interface DBStrategy {
     
     public abstract List<Map<String,Object>> findAllRecords(String tableName, int maxRecords) throws SQLException;
     
-    public void DeleteRecord(String tableName, String columnName, Object pk) throws SQLException;
+    public Map<String, Object> findRecordById(String tableName, String primaryKeyFieldName,
+            Object primaryKeyValue);
     
-    public int deleteById(String tableName, String pkColName, Object value) throws SQLException;
+    public int deleteRecordById(String tableName, String pkColName, Object value) throws SQLException;
     
-    public int updateRecordById(String tableName, List<String> colNames, List<Object> colValues, String pkColName, Object value) throws SQLException;
+    public boolean insertRecord(String tableName, List colDescriptors, List colValues);
+    
+    public int updateRecords(String tableName, List colDescriptors, List colValues, String whereField, Object whereValue);
 }

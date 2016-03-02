@@ -12,7 +12,7 @@ import java.util.Date;
  * @author Taylor
  */
 public class Author {
-    private int authorID;
+    private int authorId;
     private String authorName;
     private Date dateAdded;
 
@@ -20,17 +20,17 @@ public class Author {
         this.dateAdded = new Date();
     }
 
-    public Author(int authorID) {
-        this.authorID = authorID;
+    public Author(int authorId) {
+        this.authorId = authorId;
         this.dateAdded = new Date();
     }
 
-    public int getAuthorID() {
-        return authorID;
+    public int getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthorID(int authorID) {
-        this.authorID = authorID;
+    public void setAuthorId(int authorID) {
+        this.authorId = authorID;
     }
 
     public String getAuthorName() {
@@ -52,7 +52,7 @@ public class Author {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + this.authorID;
+        hash = 41 * hash + this.authorId;
         return hash;
     }
 
@@ -68,7 +68,7 @@ public class Author {
             return false;
         }
         final Author other = (Author) obj;
-        if (this.authorID != other.authorID) {
+        if (this.authorId != other.authorId) {
             return false;
         }
         return true;
@@ -76,7 +76,7 @@ public class Author {
 
     @Override
     public String toString() {
-        return "Author{" + "authorID=" + authorID + ", authorName=" + authorName + ", dateAdded=" + dateAdded + '}';
+        return "Author{" + "authorId=" + authorId + ", authorName=" + authorName + ", dateAdded=" + dateAdded + '}';
     }
     
     

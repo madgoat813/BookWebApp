@@ -18,28 +18,28 @@ import javax.enterprise.inject.Alternative;
  */
 @Dependent
 @Alternative
-public class MockAuthorDao implements AuthorDaoStrategy, Serializable{
-    
+public class MockAuthorDao implements AuthorDaoStrategy, Serializable {
+
     private DBStrategy db;
     private List<Author> authors;
 
     public MockAuthorDao() {
-        Author taylor = new Author(101);
-        Author jim = new Author(102);
-        Author jake = new Author(103);
-       taylor.setAuthorName("Taylor McFall");
-       jim.setAuthorName("Jim Lindenburg");
-       jake.setAuthorName("Jake Boldt");
-       authors = new ArrayList<Author>(3);
-       authors.add(taylor);
-       authors.add(jim);
-       authors.add(jake);
+        Author taylor = new Author(1);
+        Author jim = new Author(2);
+        Author jake = new Author(3);
+        taylor.setAuthorName("Taylor McFall");
+        jim.setAuthorName("Jim Lindenburg");
+        jake.setAuthorName("Jake Boldt");
+        authors = new ArrayList<Author>(3);
+        authors.add(taylor);
+        authors.add(jim);
+        authors.add(jake);
     }
-    
-    public List getAuthors(){
+
+    public List getAuthors() {
         return authors;
     }
-    
+
     public int deleteAuthorById(Object id) {
         return 1;
     }
@@ -103,5 +103,14 @@ public class MockAuthorDao implements AuthorDaoStrategy, Serializable{
     public void setPwd(String pwd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-}
 
+    @Override
+    public Author getAuthorById(Integer authorId) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean saveAuthor(Integer authorId, String authorName) throws ClassNotFoundException, SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+}

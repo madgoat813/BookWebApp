@@ -19,39 +19,43 @@
               crossorigin="anonymous">
     </head>
     <body>
-        <div class="container">
+        <form method="POST" action="AuthorController?action=addEditDelete">
             <br/>
             <div class="alert alert-info" role="alert">All Authors</div>
             <table class="table">
                 <div class="col-md-1">
-                    <button type="button" class="btn btn-primary">add</button>
+                    
+                        <button type="submit" class="btn btn-primary" value="add/edit" name="submit">add/edit</button>
+                   
                 </div>
                 <div class="col-sm-7">
-                    <button type="button" class="btn btn-warning">edit</button>
+                    <!--form method="POST" action="AuthorController?action=delete"-->
+                    <button type="submit" class="btn btn-danger" value="delete" name="submit" action="delete">delete</button>
+                    <!--/form-->
                 </div>
-                <div class="col-md-4">
-                    <button type="button" class="btn btn-danger">delete</button>
-                </div>
+                
                 <thead><td>ID</td><td>Name</td><td>Date Added</td></thead>
                 <c:forEach var="i" items="${authors}" >
                     <tr>
-                        <td><c:out value="${ i.authorID }"/></td>
-                        <td><c:out value="${ i.authorName }"/></td>
-                        <td><c:out value="${ i.dateAdded }"/></td>
-                    </tr>
-                </c:forEach>
+                        <td><input type="checkbox" name="authorId" value="${i.authorId}" /></td>
+                        <td>${ i.authorName }</td>
+                        <td>${ i.dateAdded }</td>
+                    </c:forEach>
             </table>
             <div class="col-md-1">
-                <button type="button" class="btn btn-primary">add</button>
+                <!--form method="POST" action="AuthorController?action=add"-->
+                <button type="submit" class="btn btn-primary" value="add/edit" name="submit">add/edit</button>
+                <!--/form-->
+
             </div>
             <div class="col-sm-7">
-                <button type="button" class="btn btn-warning">edit</button>
+                <!--form method="POST" action="AuthorController?action=delete"-->
+                <button type="submit" class="btn btn-danger" calue="delete" name="submit">delete</button>
+                <!--/form-->
             </div>
-            <div class="col-md-4">
-                <button type="button" class="btn btn-danger">delete</button>
-            </div>
+            
 
-        </div>
+        </form>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" 
                 integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo= sha512-2e8qq0ETcfWRI4HJBzQiA3UoyFk6tbNyG+qSaIBZLyW9Xf3sWZHN/lxe9fTh1U45DpPf07yj94KsUHHWe4Yk1A==" 
         crossorigin="anonymous"></script>

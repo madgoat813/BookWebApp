@@ -5,10 +5,15 @@ package edu.wctc.twm.bookwebapp;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+import edu.wctc.twm.bookwebapp.model.Author;
 import edu.wctc.twm.bookwebapp.model.AuthorService;
 import edu.wctc.twm.bookwebapp.model.MockAuthorDao;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,22 +22,31 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 /**
  *
  * @author Taylor
  */
-@WebServlet(urlPatterns = {"/AuthorController"})
+@WebServlet(name = "AuthorController", urlPatterns = {"/AuthorController"})
 public class AuthorController extends HttpServlet {
-private static final String TYPE = "text/html;charset=UTF-8";
-    private static final String ATT = "authors";
-    private static final String PAGE = "/index.jsp";
-    
+
+    private static final String NO_PARAM_ERR_MSG = "No request parameter identified";
+    private static final String LIST_PAGE = "/index.jsp";
+    private static final String ADD_PAGE = "/addPage.jsp";
+    private static final String EDIT_PAGE = "/editPage.jsp";
+    private static final String LIST_ACTION = "list";
+    private static final String ADD_EDIT_DELETE_ACTION = "addEditDelete";
+    private static final String SUBMIT_ACTION = "submit";
+    private static final String ADD_EDIT_ACTION = "add/edit";
+    private static final String DELETE_ACTION = "delete";
+    private static final String ACTION_PARAM = "action";
+    private static final String SAVE_ACTION = "save";
+    private static final String CANCEL_ACTION = "cancel";
+
     private String driverClass;
     private String url;
     private String userName;
     private String password;
-    
+
     @Inject
     private AuthorService aServe;
 
@@ -46,24 +60,99 @@ private static final String TYPE = "text/html;charset=UTF-8";
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType(TYPE);
-        RequestDispatcher view = null;
+            throws ServletException, IOException, SQLException, ClassNotFoundException, Exception {
+        response.setContentType("text/html;charset=UTF-8");
+
+        String destination = LIST_PAGE;
+        String action = request.getParameter(ACTION_PARAM);
+
+        // use init parameters to config database connection
         configDbConnection();
+
         try {
-            
-            request.setAttribute(ATT,aServe.getAuthorList());
-            view = request.getRequestDispatcher(PAGE);
-        }catch(Exception e){
-            
-        }finally{
-            view.forward(request, response);
+
+            /*
+             Determine what action to take based on a passed in QueryString
+             Parameter
+             */
+            switch (action) {
+                case LIST_ACTION:
+                    this.refreshList(request, aServe);
+                    destination = LIST_PAGE;
+                    break;
+
+                case ADD_EDIT_DELETE_ACTION:
+                    String subAction = request.getParameter(SUBMIT_ACTION);
+
+                    if (subAction.equals(ADD_EDIT_ACTION)) {
+                        // must be add or edit, go to addEdit page
+                        String[] authorIds = request.getParameterValues("authorId");
+                        if (authorIds == null) {
+                            // must be an add action, nothing to do but
+                            // go to edit page
+                            destination = ADD_PAGE;
+                        } else {
+                            // must be an edit action, need to get data
+                            // for edit and then forward to edit page
+
+                            // Only process first row selected
+                            String authorId = authorIds[0];
+                            Author author = aServe.getAuthorById(authorId);
+                            request.setAttribute("author", author);
+                            destination = EDIT_PAGE;
+                        }
+
+                    } else {
+                        // must be DELETE
+                        // get array based on records checked
+                        String[] authorIds = request.getParameterValues("authorId");
+                        for (String id : authorIds) {
+                            aServe.deleteAuthorById(id);
+                        }
+
+                        this.refreshList(request, aServe);
+                        destination = LIST_PAGE;
+                    }
+                    break;
+
+                case SAVE_ACTION:
+                    String authorName = request.getParameter("authorName");
+                    String authorId = request.getParameter("authorId");
+                    aServe.saveOrUpdateAuthor(authorId, authorName);
+                    this.refreshList(request, aServe);
+                    destination = LIST_PAGE;
+                    break;
+
+                case CANCEL_ACTION:
+                    this.refreshList(request, aServe);
+                    destination = LIST_PAGE;
+                    break;
+                default:
+                    // no param identified in request, must be an error
+                    request.setAttribute("errMsg", NO_PARAM_ERR_MSG);
+                    destination = "/testPage.jsp";
+                    break;
+            }
+
+        } catch (Exception e) {
+
         }
+
+        // Forward to destination page
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(destination);
+
+        dispatcher.forward(request, response);
+
     }
-        private void configDbConnection() {
-            aServe.getDao().initDao(driverClass, url, userName, password);
-        }
-    
+
+    private void configDbConnection() {
+        aServe.getDao().initDao(driverClass, url, userName, password);
+    }
+
+    private void refreshList(HttpServletRequest request, AuthorService aServe) throws Exception {
+        List<Author> authors = aServe.getAuthorList();
+        request.setAttribute("authors", authors);
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -77,7 +166,15 @@ private static final String TYPE = "text/html;charset=UTF-8";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(AuthorController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AuthorController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(AuthorController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -91,7 +188,15 @@ private static final String TYPE = "text/html;charset=UTF-8";
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(AuthorController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AuthorController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(AuthorController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -103,7 +208,7 @@ private static final String TYPE = "text/html;charset=UTF-8";
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
+
     public void init() throws ServletException {
         driverClass = getServletContext().getInitParameter("db.driver.class");
         url = getServletContext().getInitParameter("db.url");
