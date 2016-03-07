@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Add Author</title>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" 
               rel="stylesheet" 
               integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" 
@@ -22,10 +22,10 @@
             <table class="table">
                 <tr>
                 <thead><td>Author Name</td></thead>
-                <td><input type="text" name="authorName" value="${author.authorName}" class="form-control" /></td>
+                <td><input type="text" name="authorName" value="${author.authorName}" class="form-control" placeholder="Enter Name Here"/></td>
                 </tr>
                 <tr>
-                <input type="submit" value="save" name="action" class="btn btn-primary"/>&nbsp;
+                <input type="submit" value="add" name="action" class="btn btn-primary"/>&nbsp;
                 <input type="submit" value="cancel" name="action" class="btn btn-danger"/>
                 </tr>
             </table>

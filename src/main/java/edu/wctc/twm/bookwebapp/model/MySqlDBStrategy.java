@@ -183,7 +183,7 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
      * @throws DataAccessException if database access error or illegal sql
      */
     @Override
-    public final int updateRecords(String tableName, List colDescriptors, List colValues,
+    public final int updateRecord(String tableName, List colDescriptors, List colValues,
             String whereField, Object whereValue)  {
         
         PreparedStatement pstmt = null;

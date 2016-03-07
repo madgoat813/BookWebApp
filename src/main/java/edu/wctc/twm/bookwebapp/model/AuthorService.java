@@ -49,14 +49,12 @@ public class AuthorService implements Serializable{
         return dao.getAuthorById(Integer.parseInt(authorId));
     }
     
-    public void saveOrUpdateAuthor(String authorId, String authorName) throws ClassNotFoundException, SQLException {
-        Integer id = null;
-        if (authorId == null || authorId.isEmpty()) {
-            id = null;
-        } else {
-            id = Integer.parseInt(authorId);
-        }
+    public void saveAuthor(String authorId, String authorName) throws ClassNotFoundException, SQLException {
+        Integer id = Integer.parseInt(authorId);
         dao.saveAuthor(id, authorName);
+    }
+    public void addAuthor(String authorName)throws ClassNotFoundException, SQLException {
+        dao.addAuthor(authorName);
     }
     
     public static void main(String[] args) throws ClassNotFoundException, SQLException {

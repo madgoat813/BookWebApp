@@ -22,7 +22,9 @@ public interface AuthorDaoStrategy {
     
     public Author getAuthorById(Integer authorId) throws SQLException, ClassNotFoundException;
     
-    public boolean saveAuthor(Integer authorId, String authorName) throws ClassNotFoundException, SQLException;
+    public void saveAuthor(Integer authorId, String authorName) throws ClassNotFoundException, SQLException;
+    
+    public void addAuthor(String authorName) throws ClassNotFoundException, SQLException;
     
     public DBStrategy getDb();
     

@@ -39,9 +39,6 @@ public class AuthorDao implements AuthorDaoStrategy, Serializable {
 //    private String url = "jdbc:mysql://localhost:3306/book";
 //    private String user = "root";
 //    private String pwd = "admin";
-    
-    
-    
     public AuthorDao() {
     }
 
@@ -53,42 +50,52 @@ public class AuthorDao implements AuthorDaoStrategy, Serializable {
         setPwd(pwd);
     }
 
+    @Override
     public String getDriver() {
         return driver;
     }
 
+    @Override
     public void setDriver(String driver) {
         this.driver = driver;
     }
 
+    @Override
     public String getUrl() {
         return url;
     }
 
+    @Override
     public void setUrl(String url) {
         this.url = url;
     }
 
+    @Override
     public String getUser() {
         return user;
     }
 
+    @Override
     public void setUser(String user) {
         this.user = user;
     }
 
+    @Override
     public String getPwd() {
         return pwd;
     }
 
+    @Override
     public void setPwd(String pwd) {
         this.pwd = pwd;
     }
 
+    @Override
     public DBStrategy getDb() {
         return db;
     }
 
+    @Override
     public void setDb(DBStrategy db) {
         this.db = db;
     }
@@ -140,38 +147,32 @@ public class AuthorDao implements AuthorDaoStrategy, Serializable {
         return result;
     }
 
-    public boolean saveAuthor(Integer authorId, String authorName) throws ClassNotFoundException, SQLException {
+    @Override
+    public void saveAuthor(Integer authorId, String authorName) throws ClassNotFoundException, SQLException {
         db.openConnection(driver, url, user, pwd);
-        boolean result = false;
-        
-        if(authorId == null || authorId.equals(0)) {
-            // must be a new record
-            result = db.insertRecord("author", Arrays.asList("author_name","date_added"), 
-                                      Arrays.asList(authorName,new Date()));
-        } else {
-            // must be an update of an existing record
-            int recsUpdated = db.updateRecords("author", Arrays.asList("author_name"), 
-                                       Arrays.asList(authorName),
-                                       "author_id", authorId);
-            if(recsUpdated > 0) {
-                result = true;
-            }
-        }
-        return result;
+        db.updateRecord("author", Arrays.asList("author_name"),
+                Arrays.asList(authorName),
+                "author_id", authorId);
+    }
+
+    @Override
+    public void addAuthor(String authorName) throws ClassNotFoundException, SQLException {
+        db.openConnection(driver, url, user, pwd);
+        db.insertRecord("author", Arrays.asList("author_name", "date_added"),
+                Arrays.asList(authorName, new Date()));
     }
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         AuthorDaoStrategy dao = new AuthorDao();
 
         List<Author> authors = dao.getAuthorList();
-        
+
         System.out.println(authors);
-        
-       // int deleteComplete = dao.deleteAuthorById(1);
+
+        // int deleteComplete = dao.deleteAuthorById(1);
         //System.out.println(deleteComplete);
         //List<Author> author = dao.getAuthorList();
-       // System.out.println(author);
-       
+        // System.out.println(author);
 //        Author ranAuthor = new Author();
 //        ranAuthor.setAuthorName("Lucifer");
 //        ranAuthor.setDateAdded(new Date());
@@ -179,17 +180,16 @@ public class AuthorDao implements AuthorDaoStrategy, Serializable {
 //        System.out.println(result);
 //        authors = dao.getAuthorList();
 //        System.out.println(authors);
-        
 //        List<String> colNames = new ArrayList<>(Arrays.asList("author_id"));
 //        List<Object> colValues = new ArrayList<>(Arrays.asList(4));
         //int results = dao.updateAuthorById(4, 1, "Taylor McFall", "1986-03-20");
         //System.out.println(results);
-       // authors = dao.getAuthorList();
+        // authors = dao.getAuthorList();
         //System.out.println(authors);
-        
         Author author = dao.getAuthorById(3);
         System.out.println(author);
         authors = dao.getAuthorList();
         System.out.println(authors);
     }
+
 }

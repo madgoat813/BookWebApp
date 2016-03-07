@@ -7,10 +7,8 @@ package edu.wctc.twm.bookwebapp;
  */
 import edu.wctc.twm.bookwebapp.model.Author;
 import edu.wctc.twm.bookwebapp.model.AuthorService;
-import edu.wctc.twm.bookwebapp.model.MockAuthorDao;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,25 +26,25 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "AuthorController", urlPatterns = {"/AuthorController"})
 public class AuthorController extends HttpServlet {
-
+    
     private static final String NO_PARAM_ERR_MSG = "No request parameter identified";
     private static final String LIST_PAGE = "/index.jsp";
     private static final String ADD_PAGE = "/addPage.jsp";
     private static final String EDIT_PAGE = "/editPage.jsp";
+    private static final String EDIT_ERROR = "/testPage.jsp";
     private static final String LIST_ACTION = "list";
     private static final String ADD_EDIT_DELETE_ACTION = "addEditDelete";
     private static final String SUBMIT_ACTION = "submit";
-    private static final String ADD_EDIT_ACTION = "add/edit";
-    private static final String DELETE_ACTION = "delete";
     private static final String ACTION_PARAM = "action";
     private static final String SAVE_ACTION = "save";
+    private static final String ADD_ACTION = "add";
     private static final String CANCEL_ACTION = "cancel";
-
+    
     private String driverClass;
     private String url;
     private String userName;
     private String password;
-
+    
     @Inject
     private AuthorService aServe;
 
@@ -58,17 +56,19 @@ public class AuthorController extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException, ClassNotFoundException, Exception {
         response.setContentType("text/html;charset=UTF-8");
-
+        
         String destination = LIST_PAGE;
         String action = request.getParameter(ACTION_PARAM);
 
         // use init parameters to config database connection
         configDbConnection();
-
+        
         try {
 
             /*
@@ -80,28 +80,29 @@ public class AuthorController extends HttpServlet {
                     this.refreshList(request, aServe);
                     destination = LIST_PAGE;
                     break;
-
+                
                 case ADD_EDIT_DELETE_ACTION:
                     String subAction = request.getParameter(SUBMIT_ACTION);
-
-                    if (subAction.equals(ADD_EDIT_ACTION)) {
+                    
+                    if (subAction.equals("new")) {
                         // must be add or edit, go to addEdit page
                         String[] authorIds = request.getParameterValues("authorId");
-                        if (authorIds == null) {
-                            // must be an add action, nothing to do but
-                            // go to edit page
-                            destination = ADD_PAGE;
-                        } else {
-                            // must be an edit action, need to get data
-                            // for edit and then forward to edit page
-
-                            // Only process first row selected
-                            String authorId = authorIds[0];
-                            Author author = aServe.getAuthorById(authorId);
-                            request.setAttribute("author", author);
-                            destination = EDIT_PAGE;
+                        
+                        destination = ADD_PAGE;
+                    } else if (subAction.equals("edit")) {
+                        String[] authorIds = request.getParameterValues("authorId");
+                        if (authorIds == null || authorIds.length > 1){
+                            this.refreshList(request, aServe);
+                            destination = EDIT_ERROR;
+                            break;
                         }
 
+                        
+                        String authorId = authorIds[0];
+                        Author author = aServe.getAuthorById(authorId);
+                        request.setAttribute("author", author);
+                        destination = EDIT_PAGE;
+                        
                     } else {
                         // must be DELETE
                         // get array based on records checked
@@ -109,20 +110,26 @@ public class AuthorController extends HttpServlet {
                         for (String id : authorIds) {
                             aServe.deleteAuthorById(id);
                         }
-
+                        
                         this.refreshList(request, aServe);
                         destination = LIST_PAGE;
                     }
                     break;
-
+                
                 case SAVE_ACTION:
                     String authorName = request.getParameter("authorName");
                     String authorId = request.getParameter("authorId");
-                    aServe.saveOrUpdateAuthor(authorId, authorName);
+                    aServe.saveAuthor(authorId, authorName);
                     this.refreshList(request, aServe);
                     destination = LIST_PAGE;
                     break;
-
+                case ADD_ACTION:
+                    String aName = request.getParameter("authorName");
+                    aServe.addAuthor(aName);
+                    this.refreshList(request, aServe);
+                    destination = LIST_PAGE;
+                    break;
+                
                 case CANCEL_ACTION:
                     this.refreshList(request, aServe);
                     destination = LIST_PAGE;
@@ -133,22 +140,22 @@ public class AuthorController extends HttpServlet {
                     destination = "/testPage.jsp";
                     break;
             }
-
+            
         } catch (Exception e) {
-
+            
         }
 
         // Forward to destination page
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(destination);
-
+        
         dispatcher.forward(request, response);
-
+        
     }
-
+    
     private void configDbConnection() {
         aServe.getDao().initDao(driverClass, url, userName, password);
     }
-
+    
     private void refreshList(HttpServletRequest request, AuthorService aServe) throws Exception {
         List<Author> authors = aServe.getAuthorList();
         request.setAttribute("authors", authors);
@@ -168,12 +175,18 @@ public class AuthorController extends HttpServlet {
             throws ServletException, IOException {
         try {
             processRequest(request, response);
+            
         } catch (SQLException ex) {
-            Logger.getLogger(AuthorController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AuthorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AuthorController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AuthorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            
         } catch (Exception ex) {
-            Logger.getLogger(AuthorController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AuthorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -190,12 +203,18 @@ public class AuthorController extends HttpServlet {
             throws ServletException, IOException {
         try {
             processRequest(request, response);
+            
         } catch (SQLException ex) {
-            Logger.getLogger(AuthorController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AuthorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AuthorController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AuthorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            
         } catch (Exception ex) {
-            Logger.getLogger(AuthorController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AuthorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 

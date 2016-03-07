@@ -27,5 +27,5 @@ public interface DBStrategy {
     
     public boolean insertRecord(String tableName, List colDescriptors, List colValues);
     
-    public int updateRecords(String tableName, List colDescriptors, List colValues, String whereField, Object whereValue);
+    public int updateRecord(String tableName, List colDescriptors, List colValues, String whereField, Object whereValue);
 }
