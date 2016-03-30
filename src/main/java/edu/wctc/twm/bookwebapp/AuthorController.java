@@ -6,7 +6,7 @@ package edu.wctc.twm.bookwebapp;
  * and open the template in the editor.
  */
 import edu.wctc.twm.bookwebapp.model.Author;
-import edu.wctc.twm.bookwebapp.model.AuthorService;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
