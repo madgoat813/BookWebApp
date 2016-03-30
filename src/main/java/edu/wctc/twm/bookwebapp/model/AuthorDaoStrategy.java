@@ -7,6 +7,7 @@ package edu.wctc.twm.bookwebapp.model;
 
 import java.sql.SQLException;
 import java.util.List;
+import javax.sql.DataSource;
 
 /**
  *
@@ -31,6 +32,8 @@ public interface AuthorDaoStrategy {
     public void setDb(DBStrategy db);
     
     public void initDao(String driver, String url, String user, String pwd);
+    
+    public void initDao(DataSource ds) throws ClassNotFoundException, SQLException;
     
     public String getDriver();
     

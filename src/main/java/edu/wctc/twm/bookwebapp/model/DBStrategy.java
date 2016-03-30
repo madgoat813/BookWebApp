@@ -8,6 +8,7 @@ package edu.wctc.twm.bookwebapp.model;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import javax.sql.DataSource;
 
 /**
  *
@@ -15,6 +16,8 @@ import java.util.Map;
  */
 public interface DBStrategy {
     public void openConnection(String driverClass, String url, String userName, String password) throws ClassNotFoundException, SQLException;
+    
+    public void openConnection(DataSource ds) throws ClassNotFoundException, SQLException;
     
     public void closeConnection() throws SQLException ;
     

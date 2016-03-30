@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.enterprise.context.Dependent;
+import javax.sql.DataSource;
 
 /**
  *
@@ -26,7 +27,21 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
 
     public MySqlDBStrategy() {
     }
-
+/**
+     * Open a connection using a connection pool configured on server.
+     *
+     * @param ds - a reference to a connection pool via a JNDI name, producing
+     * this object. Typically done in a servlet using InitalContext object.
+     * @throws DataAccessException - if ds cannot be established
+     */
+    @Override
+    public  void openConnection(DataSource ds) throws ClassNotFoundException, SQLException {
+        try {
+            conn = ds.getConnection();
+        } catch (SQLException ex) {
+            throw new SQLException();
+        }
+    }
     @Override
     public void openConnection(String driverClass, String url, String userName, String password) throws ClassNotFoundException, SQLException {
         Class.forName(driverClass);
@@ -278,11 +293,11 @@ public class MySqlDBStrategy implements DBStrategy, Serializable {
 //        int result = db.updateRecordById("author", colNames, colValues, "author_id", 1);
 //        
 //        db.closeConnection();
-        db.openConnection("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/book", "root", "admin");
-
-        Map<String, Object> result = db.findRecordById("author", "author_id", 1);
-        System.out.println(result);
-        db.closeConnection();
+//        db.openConnection("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/book", "root", "admin");
+//
+//        Map<String, Object> result = db.findRecordById("author", "author_id", 1);
+//        System.out.println(result);
+//        db.closeConnection();
 
     }
 

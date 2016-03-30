@@ -38,6 +38,7 @@
                         <td><input type="checkbox" name="authorId" value="${i.authorId}" /></td>
                         <td>${ i.authorName }</td>
                         <td>${ i.dateAdded }</td>
+                        <td>${ authors }</td>
                     </c:forEach>
             </table>
             <div class="col-md-2">
