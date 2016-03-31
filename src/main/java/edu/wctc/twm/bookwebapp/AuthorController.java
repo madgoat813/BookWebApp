@@ -5,6 +5,7 @@ package edu.wctc.twm.bookwebapp;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import edu.wctc.twm.bookwebapp.ejb.AuthorFacade;
 import edu.wctc.twm.bookwebapp.model.Author;
 
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class AuthorController extends HttpServlet {
     private String dbJndiName;
 
     @Inject
-    private AuthorService aServe;
+    private AuthorFacade aServe;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

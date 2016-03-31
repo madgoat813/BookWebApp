@@ -6,20 +6,26 @@
 package edu.wctc.twm.bookwebapp.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,6 +41,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Author.findByDateAdded", query = "SELECT a FROM Author a WHERE a.dateAdded = :dateAdded")})
 public class Author implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "authorId", fetch = FetchType.EAGER)
+    private Collection<Book> bookCollection;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +56,10 @@ public class Author implements Serializable {
     @Column(name = "date_added")
     @Temporal(TemporalType.DATE)
     private Date dateAdded;
+    @OneToMany(mappedBy = "authorId", cascade = CascadeType.ALL)
+    private Set<Book> bookSet;
+    
+    
 
     public Author() {
     }
@@ -78,7 +91,16 @@ public class Author implements Serializable {
     public void setDateAdded(Date dateAdded) {
         this.dateAdded = dateAdded;
     }
+    
+    @XmlTransient
+    public Set<Book> getBookSet() {
+        return bookSet;
+    }
 
+    public void setBookSet(Set<Book> bookSet) {
+        this.bookSet = bookSet;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -103,5 +125,14 @@ public class Author implements Serializable {
     public String toString() {
         return "edu.wctc.twm.bookwebapp.model.Author[ authorId=" + authorId + " ]";
     }
-    
+
+    @XmlTransient
+    public Collection<Book> getBookCollection() {
+        return bookCollection;
+    }
+
+    public void setBookCollection(Collection<Book> bookCollection) {
+        this.bookCollection = bookCollection;
+    }
+
 }
