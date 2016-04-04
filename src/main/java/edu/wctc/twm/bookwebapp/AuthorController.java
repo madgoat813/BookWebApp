@@ -5,11 +5,13 @@ package edu.wctc.twm.bookwebapp;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import edu.wctc.twm.bookwebapp.ejb.AbstractFacade;
 import edu.wctc.twm.bookwebapp.ejb.AuthorFacade;
 import edu.wctc.twm.bookwebapp.model.Author;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +19,7 @@ import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.persistence.Entity;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -73,11 +76,11 @@ public class AuthorController extends HttpServlet {
         String action = request.getParameter(ACTION_PARAM);
 
         // use init parameters to config database connection
-        configDbConnection();
+        //configDbConnection();
 
         try {
             // use init parameters to config database connection
-            configDbConnection();
+            //configDbConnection();
             
             OUTER:
             switch (action) {
@@ -102,7 +105,7 @@ public class AuthorController extends HttpServlet {
                                 break OUTER;
                             }
                             String authorId = authorIds[0];
-                            Author author = aServe.getAuthorById(authorId);
+                            Author author = aServe.find(authorId);
                             request.setAttribute("author", author);
                             destination = EDIT_PAGE;
                             break;
@@ -112,7 +115,8 @@ public class AuthorController extends HttpServlet {
                             // get array based on records checked
                             String[] authorIds = request.getParameterValues("authorId");
                             for (String id : authorIds) {
-                                aServe.deleteAuthorById(id);
+                                Author e =  aServe.find(id);
+                                aServe.remove(e);
                             }
                             this.refreshList(request, aServe);
                             destination = LIST_PAGE;
@@ -123,13 +127,18 @@ public class AuthorController extends HttpServlet {
                 case SAVE_ACTION:
                     String authorName = request.getParameter("authorName");
                     String authorId = request.getParameter("authorId");
-                    aServe.saveAuthor(authorId, authorName);
+                    Author author = aServe.find(new Integer(authorId));
+                        author.setAuthorName(authorName);
+                    aServe.edit(author);
                     this.refreshList(request, aServe);
                     destination = LIST_PAGE;
                     break;
                 case ADD_ACTION:
                     String aName = request.getParameter("authorName");
-                    aServe.addAuthor(aName);
+                    author = new Author();
+                        author.setAuthorName(aName);
+                        author.setDateAdded(new Date());
+                    aServe.create(author);
                     this.refreshList(request, aServe);
                     destination = LIST_PAGE;
                     break;
@@ -155,18 +164,18 @@ public class AuthorController extends HttpServlet {
 
     }
 
-    private void configDbConnection() throws NamingException, ClassNotFoundException, SQLException {
-        if (dbJndiName == null) {
-            aServe.getDao().initDao(driverClass, url, userName, password);
-        } else {
-            Context ctx = new InitialContext();
-            DataSource ds = (DataSource) ctx.lookup(dbJndiName);
-            aServe.getDao().initDao(ds);
-        }
-    }
+//    private void configDbConnection() throws NamingException, ClassNotFoundException, SQLException {
+//        if (dbJndiName == null) {
+//            aServe.getDao().initDao(driverClass, url, userName, password);
+//        } else {
+//            Context ctx = new InitialContext();
+//            DataSource ds = (DataSource) ctx.lookup(dbJndiName);
+//            aServe.getDao().initDao(ds);
+//        }
+//    }
 
-    private void refreshList(HttpServletRequest request, AuthorService aServe) throws Exception {
-        List<Author> authors = aServe.getAuthorList();
+    private void refreshList(HttpServletRequest request, AbstractFacade aServe) throws Exception {
+        List<Author> authors = aServe.findAll();
         request.setAttribute("authors", authors);
     }
 
