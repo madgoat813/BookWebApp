@@ -10,26 +10,43 @@
     remember, all of these params are global to your app and can be
     accessed from any JSP page or servlet, which may not be what you
     want. If not, see below. -->
+    
+    <!-- Begin Spring-specific configuration -->
     <context-param>
-        <param-name>db.driver.class</param-name>
-        <param-value>com.mysql.jdbc.Driver</param-value>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:applicationContext.xml</param-value>
     </context-param>
-    <context-param>
-        <param-name>db.url</param-name>
-        <param-value>jdbc:mysql://localhost:3306/book</param-value>
-    </context-param>
-    <context-param>
-        <param-name>db.username</param-name>
-        <param-value>root</param-value>
-    </context-param>
-    <context-param>
-        <param-name>db.password</param-name>
-        <param-value>admin</param-value>
-    </context-param>
-    <context-param>
-        <param-name>db.jndi.name</param-name>
-        <param-value>jdbc/book</param-value>
-    </context-param>
+        
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+    <!-- END Spring configuration -->
+    
+    <servlet>
+        <!-- first alias, private to config -->
+        <servlet-name>AuthorController</servlet-name>
+        <servlet-class>edu.wctc.web.demo.bookwebapp.AuthorController</servlet-class>
+        <!-- must be last item in servlet config -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>BookController</servlet-name>
+        <servlet-class>edu.wctc.web.twm.bookwebapp.BookController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <!-- reference private config alias -->
+        <servlet-name>AuthorController</servlet-name>
+        <!-- second alias is the one you use in your links -->
+        <url-pattern>/AuthorController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookController</servlet-name>
+        <url-pattern>/BookController</url-pattern>
+    </servlet-mapping>    
+    
     <session-config>
         <session-timeout>
             30
