@@ -94,14 +94,14 @@ public class BookController extends HttpServlet {
                         }
                         case "edit": {
                             String[] bookIds = request.getParameterValues("bookId");
-                            if (bookIds == null || bookIds.length > 1) {
-                                this.refreshList(request, bServe);
-                                destination = EDIT_ERROR;
-                                break OUTER;
-                            }
-                            String bookId = bookIds[0];
-                            Book book = bServe.find(bookId);
-                            request.setAttribute("book", book);
+//                            if (bookIds == null || bookIds.length > 1) {
+//                                this.refreshList(request, bServe);
+//                                destination = EDIT_ERROR;
+//                                break OUTER;
+//                            }
+//                            String bookId = bookIds[0];
+//                            Book book = bServe.find(bookId);
+//                            request.setAttribute("book", book);
                             destination = EDIT_PAGE;
                             break;
                         }
