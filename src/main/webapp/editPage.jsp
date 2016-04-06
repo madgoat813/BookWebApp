@@ -32,7 +32,7 @@
                 <td><input type="text" name="authorName" value="${author.authorName}" class="form-control"/></td>
                 </tr>
                 <tr>
-                <thead><td>Date Added</td></thead>
+                <thead><td>Date Added </td></thead>
                 <td><input type="text" name="dateAdded" value="${author.dateAdded}" class="form-control" readonly/></td>
                 </tr>
                 <tr>
