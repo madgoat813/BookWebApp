@@ -50,7 +50,9 @@ public class BookController extends HttpServlet {
     private String dbJndiName;
 
     @Inject
-    private BookFacade bServe;
+    private AbstractFacade<Book> bServe;
+    @Inject
+    private AbstractFacade<Author> aServe;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -69,18 +71,19 @@ public class BookController extends HttpServlet {
 
         String destination = LIST_PAGE;
         String action = request.getParameter(ACTION_PARAM);
-
+        Book book = null;
         // use init parameters to config database connection
         //configDbConnection();
 
         try {
             // use init parameters to config database connection
             //configDbConnection();
-            
+
             OUTER:
             switch (action) {
                 case LIST_ACTION:
-                    this.refreshList(request, bServe);
+                    this.refreshBookList(request, bServe);
+                    this.refreshAuthorList(request, aServe);
                     destination = LIST_PAGE;
                     break;
                 case ADD_EDIT_DELETE_ACTION:
@@ -89,31 +92,36 @@ public class BookController extends HttpServlet {
                         case "new": {
                             // must be add or edit, go to addEdit page
                             String[] bookIds = request.getParameterValues("bookId");
+
+                            this.refreshAuthorList(request, aServe);
                             destination = ADD_PAGE;
                             break;
                         }
                         case "edit": {
                             String[] bookIds = request.getParameterValues("bookId");
-//                            if (bookIds == null || bookIds.length > 1) {
-//                                this.refreshList(request, bServe);
-//                                destination = EDIT_ERROR;
-//                                break OUTER;
-//                            }
-//                            String bookId = bookIds[0];
-//                            Book book = bServe.find(bookId);
-//                            request.setAttribute("book", book);
+                            if (bookIds == null || bookIds.length > 1) {
+                                this.refreshBookList(request, bServe);
+                                this.refreshAuthorList(request, aServe);
+                                destination = EDIT_ERROR;
+                                break OUTER;
+                            }
+                            String bookId = bookIds[0];
+                            book = bServe.find(new Integer(bookId));
+                            request.setAttribute("book", book);
+
+                            this.refreshAuthorList(request, aServe);
                             destination = EDIT_PAGE;
                             break;
                         }
-                        default: {
-                            // must be DELETE
-                            // get array based on records checked
+                        case "delete": {
+
                             String[] bookIds = request.getParameterValues("bookId");
                             for (String id : bookIds) {
-                                Book b =  bServe.find(id);
+                                Book b = bServe.find(new Integer(id));
                                 bServe.remove(b);
                             }
-                            this.refreshList(request, bServe);
+                            this.refreshBookList(request, bServe);
+                            this.refreshAuthorList(request, aServe);
                             destination = LIST_PAGE;
                             break;
                         }
@@ -124,12 +132,17 @@ public class BookController extends HttpServlet {
                     String bookId = request.getParameter("bookId");
                     String isbn = request.getParameter("isbn");
                     String authorId = request.getParameter("authorId");
-                    Book book = bServe.find(new Integer(bookId));
-                        book.setBookName(bookName);
-                        book.setIsbn(isbn);
-                        book.setAuthorId(new Author(Integer.parseInt(authorId)));
+                    book = bServe.find(new Integer(bookId));
+                    book.setBookName(bookName);
+                    book.setIsbn(isbn);
+                    Author author = null;
+                    if (authorId != null) {
+                        author = aServe.find(new Integer(authorId));
+                        book.setAuthorId(author);
+                    }
                     bServe.edit(book);
-                    this.refreshList(request, bServe);
+                    this.refreshBookList(request, bServe);
+                    this.refreshAuthorList(request, aServe);
                     destination = LIST_PAGE;
                     break;
                 case ADD_ACTION:
@@ -137,15 +150,17 @@ public class BookController extends HttpServlet {
                     String bIsbn = request.getParameter("isbn");
                     String bAuthorId = request.getParameter("authorId");
                     book = new Book();
-                        book.setBookName(bName);
-                        book.setIsbn(bIsbn);
-                        book.setAuthorId(new Author(Integer.parseInt(bAuthorId)));
+                    book.setBookName(bName);
+                    book.setIsbn(bIsbn);
+                    book.setAuthorId(new Author(Integer.parseInt(bAuthorId)));
                     bServe.create(book);
-                    this.refreshList(request, bServe);
+                    this.refreshBookList(request, bServe);
+                    this.refreshAuthorList(request, aServe);
                     destination = LIST_PAGE;
                     break;
                 case CANCEL_ACTION:
-                    this.refreshList(request, bServe);
+                    this.refreshBookList(request, bServe);
+                    this.refreshAuthorList(request, aServe);
                     destination = LIST_PAGE;
                     break;
                 default:
@@ -175,10 +190,14 @@ public class BookController extends HttpServlet {
 //            aServe.getDao().initDao(ds);
 //        }
 //    }
-
-    private void refreshList(HttpServletRequest request, AbstractFacade bServe) throws Exception {
-        List<Book> books = bServe.findAll();
+    private void refreshBookList(HttpServletRequest request, AbstractFacade<Book> bookService) throws Exception {
+        List<Book> books = bookService.findAll();
         request.setAttribute("books", books);
+    }
+
+    private void refreshAuthorList(HttpServletRequest request, AbstractFacade<Author> authService) throws Exception {
+        List<Author> authors = authService.findAll();
+        request.setAttribute("authors", authors);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

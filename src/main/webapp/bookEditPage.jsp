@@ -37,7 +37,7 @@
                 </tr>
                 <tr>
                 <thead><td>Author Id</td></thead>
-                <td><input type="text" name="authorId" value="${book.authorId}" class="form-control"/></td>
+                <td><input type="text" name="authorId" value="${book.authorId.authorId}" class="form-control"/></td>
                 </tr>
                 <tr>
                     <input type="submit" value="save" name="action" class="btn btn-primary"/>&nbsp;

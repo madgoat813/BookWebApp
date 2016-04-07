@@ -38,7 +38,7 @@
                         <td><input type="checkbox" name="bookId" value="${i.bookId}" /></td>
                         <td>${ i.bookName }</td>
                         <td>${ i.isbn }</td>
-                        <td>${ i.authorId }</td>
+                        <td>${ i.authorId.authorName }</td>
                     </c:forEach>
             </table>
             <div class="col-md-2">

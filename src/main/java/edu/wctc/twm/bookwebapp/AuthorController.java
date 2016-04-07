@@ -105,7 +105,7 @@ public class AuthorController extends HttpServlet {
                                 break OUTER;
                             }
                             String authorId = authorIds[0];
-                            Author author = aServe.find(authorId);
+                            Author author = aServe.find(new Integer(authorId));
                             request.setAttribute("author", author);
                             destination = EDIT_PAGE;
                             break;
@@ -115,7 +115,7 @@ public class AuthorController extends HttpServlet {
                             // get array based on records checked
                             String[] authorIds = request.getParameterValues("authorId");
                             for (String id : authorIds) {
-                                Author e =  aServe.find(id);
+                                Author e =  aServe.find(new Integer(id));
                                 aServe.remove(e);
                             }
                             this.refreshList(request, aServe);
