@@ -1,13 +1,14 @@
-package edu.wctc.twm.bookwebapp;
+package edu.wctc.twm.bookwebapp.controller;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import edu.wctc.twm.bookwebapp.ejb.AbstractFacade;
-import edu.wctc.twm.bookwebapp.ejb.AuthorFacade;
-import edu.wctc.twm.bookwebapp.model.Author;
+//import edu.wctc.twm.bookwebapp.ejb.AbstractFacade;
+//import edu.wctc.twm.bookwebapp.ejb.AuthorFacade;
+import edu.wctc.twm.bookwebapp.entity.Author;
+import edu.wctc.twm.bookwebapp.service.AuthorService;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -55,7 +56,7 @@ public class AuthorController extends HttpServlet {
     private String dbJndiName;
 
     @Inject
-    private AuthorFacade aServe;
+    private AuthorService aServe;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -105,7 +106,7 @@ public class AuthorController extends HttpServlet {
                                 break OUTER;
                             }
                             String authorId = authorIds[0];
-                            Author author = aServe.find(authorId);
+                            Author author = aServe.findById(authorId);
                             request.setAttribute("author", author);
                             destination = EDIT_PAGE;
                             break;
@@ -115,7 +116,7 @@ public class AuthorController extends HttpServlet {
                             // get array based on records checked
                             String[] authorIds = request.getParameterValues("authorId");
                             for (String id : authorIds) {
-                                Author e =  aServe.find(id);
+                                Author e =  aServe.findById(id);
                                 aServe.remove(e);
                             }
                             this.refreshList(request, aServe);
@@ -127,7 +128,7 @@ public class AuthorController extends HttpServlet {
                 case SAVE_ACTION:
                     String authorName = request.getParameter("authorName");
                     String authorId = request.getParameter("authorId");
-                    Author author = aServe.find(new Integer(authorId));
+                    Author author = aServe.findById(authorId);
                         author.setAuthorName(authorName);
                     aServe.edit(author);
                     this.refreshList(request, aServe);
@@ -174,7 +175,7 @@ public class AuthorController extends HttpServlet {
 //        }
 //    }
 
-    private void refreshList(HttpServletRequest request, AbstractFacade aServe) throws Exception {
+    private void refreshList(HttpServletRequest request, AuthorService aServe) throws Exception {
         List<Author> authors = aServe.findAll();
         request.setAttribute("authors", authors);
     }
