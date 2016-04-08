@@ -12,16 +12,8 @@ import edu.wctc.twm.bookwebapp.service.AuthorService;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.inject.Inject;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.persistence.Entity;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -29,7 +21,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -205,21 +196,21 @@ public class AuthorController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-
-        } catch (SQLException ex) {
-            Logger.getLogger(AuthorController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AuthorController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-
-        } catch (Exception ex) {
-            Logger.getLogger(AuthorController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            processRequest(request, response);
+//
+//        } catch (SQLException ex) {
+//            Logger.getLogger(AuthorController.class
+//                    .getName()).log(Level.SEVERE, null, ex);
+//
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(AuthorController.class
+//                    .getName()).log(Level.SEVERE, null, ex);
+//
+//        } catch (Exception ex) {
+//            Logger.getLogger(AuthorController.class
+//                    .getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     /**
@@ -233,21 +224,21 @@ public class AuthorController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-
-        } catch (SQLException ex) {
-            Logger.getLogger(AuthorController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AuthorController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-
-        } catch (Exception ex) {
-            Logger.getLogger(AuthorController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            processRequest(request, response);
+//
+//        } catch (SQLException ex) {
+//            Logger.getLogger(AuthorController.class
+//                    .getName()).log(Level.SEVERE, null, ex);
+//
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(AuthorController.class
+//                    .getName()).log(Level.SEVERE, null, ex);
+//
+//        } catch (Exception ex) {
+//            Logger.getLogger(AuthorController.class
+//                    .getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     /**
