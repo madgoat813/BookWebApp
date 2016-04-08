@@ -13,6 +13,7 @@ import edu.wctc.twm.bookwebapp.service.AuthorService;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,12 +23,15 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.persistence.Entity;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  *
@@ -55,7 +59,6 @@ public class AuthorController extends HttpServlet {
     private String password;
     private String dbJndiName;
 
-    @Inject
     private AuthorService aServe;
 
     /**
@@ -75,14 +78,14 @@ public class AuthorController extends HttpServlet {
 
         String destination = LIST_PAGE;
         String action = request.getParameter(ACTION_PARAM);
-
+        Author author = null;
         // use init parameters to config database connection
         //configDbConnection();
 
         try {
             // use init parameters to config database connection
             //configDbConnection();
-            
+
             OUTER:
             switch (action) {
                 case LIST_ACTION:
@@ -94,7 +97,7 @@ public class AuthorController extends HttpServlet {
                     switch (subAction) {
                         case "new": {
                             // must be add or edit, go to addEdit page
-                            String[] authorIds = request.getParameterValues("authorId");
+                            //String[] authorIds = request.getParameterValues("authorId");
                             destination = ADD_PAGE;
                             break;
                         }
@@ -106,18 +109,25 @@ public class AuthorController extends HttpServlet {
                                 break OUTER;
                             }
                             String authorId = authorIds[0];
-                            Author author = aServe.findById(authorId);
+                            author = aServe.findByIdAndFetchBooksEagerly(authorId);
+                            if (author == null) {
+                                author = aServe.findById(authorId);
+                                author.setBookSet(new LinkedHashSet<>());
+                            }
                             request.setAttribute("author", author);
                             destination = EDIT_PAGE;
                             break;
                         }
-                        default: {
-                            // must be DELETE
-                            // get array based on records checked
+                        case "delete": {
+
                             String[] authorIds = request.getParameterValues("authorId");
                             for (String id : authorIds) {
-                                Author e =  aServe.findById(id);
-                                aServe.remove(e);
+                                author = aServe.findByIdAndFetchBooksEagerly(id);
+                                if (author == null) {
+                                    author = aServe.findById(id);
+                                    author.setBookSet(new LinkedHashSet<>());
+                                }
+                                aServe.remove(author);
                             }
                             this.refreshList(request, aServe);
                             destination = LIST_PAGE;
@@ -128,20 +138,24 @@ public class AuthorController extends HttpServlet {
                 case SAVE_ACTION:
                     String authorName = request.getParameter("authorName");
                     String authorId = request.getParameter("authorId");
-                    Author author = aServe.findById(authorId);
-                        author.setAuthorName(authorName);
+                    author = aServe.findByIdAndFetchBooksEagerly(authorId);
+                    if (author == null) {
+                        author = aServe.findById(authorId);
+                        author.setBookSet(new LinkedHashSet<>());
+                    }
+                    author.setAuthorName(authorName);
                     aServe.edit(author);
                     this.refreshList(request, aServe);
                     destination = LIST_PAGE;
                     break;
                 case ADD_ACTION:
-                    String aName = request.getParameter("authorName");
-                    author = new Author();
-                        author.setAuthorName(aName);
-                        author.setDateAdded(new Date());
-                    aServe.create(author);
-                    this.refreshList(request, aServe);
-                    destination = LIST_PAGE;
+//                    String aName = request.getParameter("authorName");
+//                    author = new Author();
+//                    author.setAuthorName(aName);
+//                    author.setDateAdded(new Date());
+//                    aServe.create(author);
+//                    this.refreshList(request, aServe);
+//                    destination = LIST_PAGE;
                     break;
                 case CANCEL_ACTION:
                     this.refreshList(request, aServe);
@@ -174,7 +188,6 @@ public class AuthorController extends HttpServlet {
 //            aServe.getDao().initDao(ds);
 //        }
 //    }
-
     private void refreshList(HttpServletRequest request, AuthorService aServe) throws Exception {
         List<Author> authors = aServe.findAll();
         request.setAttribute("authors", authors);
@@ -238,6 +251,27 @@ public class AuthorController extends HttpServlet {
     }
 
     /**
+     * Called after the constructor is called by the container. This is the
+     * correct place to do one-time initialization.
+     *
+     * @throws ServletException
+     */
+    @Override
+    public void init() throws ServletException {
+        //        driverClass = getServletContext().getInitParameter("db.driver.class");
+//        url = getServletContext().getInitParameter("db.url");
+//        userName = getServletContext().getInitParameter("db.username");
+//        password = getServletContext().getInitParameter("db.password");
+//        dbJndiName = getServletContext().getInitParameter("db.jndi.name");
+        // Ask Spring for object to inject
+        ServletContext sctx = getServletContext();
+        WebApplicationContext ctx
+                = WebApplicationContextUtils.getWebApplicationContext(sctx);
+        aServe = (AuthorService) ctx.getBean("authorService");
+
+    }
+
+    /**
      * Returns a short description of the servlet.
      *
      * @return a String containing servlet description
@@ -247,12 +281,12 @@ public class AuthorController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    @Override
-    public void init() throws ServletException {
-//        driverClass = getServletContext().getInitParameter("db.driver.class");
-//        url = getServletContext().getInitParameter("db.url");
-//        userName = getServletContext().getInitParameter("db.username");
-//        password = getServletContext().getInitParameter("db.password");
-        dbJndiName = getServletContext().getInitParameter("db.jndi.name");
-    }
+//    @Override
+//    public void init() throws ServletException {
+////        driverClass = getServletContext().getInitParameter("db.driver.class");
+////        url = getServletContext().getInitParameter("db.url");
+////        userName = getServletContext().getInitParameter("db.username");
+////        password = getServletContext().getInitParameter("db.password");
+////        dbJndiName = getServletContext().getInitParameter("db.jndi.name");
+//    }
 }

@@ -4,6 +4,7 @@ import edu.wctc.twm.bookwebapp.entity.Book;
 import edu.wctc.twm.bookwebapp.repository.AuthorRepository;
 import edu.wctc.twm.bookwebapp.repository.BookRepository;
 import java.util.List;
+import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookService {
     private transient final Logger LOG = LoggerFactory.getLogger(BookService.class);
     
-    @Autowired
+    @Inject
     private BookRepository bookRepo;
     
-    @Autowired
+    @Inject
     private AuthorRepository authorRepo;
 
     public BookService() {

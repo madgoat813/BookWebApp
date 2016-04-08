@@ -5,13 +5,17 @@
  */
 package edu.wctc.twm.bookwebapp.controller;
 
+import edu.wctc.twm.bookwebapp.service.AuthorService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  *
@@ -74,7 +78,26 @@ public class BookController extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
+    /**
+     * Called after the constructor is called by the container. This is the
+     * correct place to do one-time initialization.
+     *
+     * @throws ServletException
+     */
+    @Override
+    public void init() throws ServletException {
+        //        driverClass = getServletContext().getInitParameter("db.driver.class");
+//        url = getServletContext().getInitParameter("db.url");
+//        userName = getServletContext().getInitParameter("db.username");
+//        password = getServletContext().getInitParameter("db.password");
+//        dbJndiName = getServletContext().getInitParameter("db.jndi.name");
+        // Ask Spring for object to inject
+        ServletContext sctx = getServletContext();
+        WebApplicationContext ctx
+                = WebApplicationContextUtils.getWebApplicationContext(sctx);
+        aServe = (AuthorService) ctx.getBean("authorService");
 
+    }
     /**
      * Returns a short description of the servlet.
      *
