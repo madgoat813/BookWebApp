@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -77,7 +79,7 @@ public class AuthorController extends HttpServlet {
             // use init parameters to config database connection
             //configDbConnection();
 
-            OUTER:
+            //OUTER:
             switch (action) {
                 case LIST_ACTION:
                     this.refreshList(request, aServe);
@@ -97,7 +99,7 @@ public class AuthorController extends HttpServlet {
                             if (authorIds == null || authorIds.length > 1) {
                                 this.refreshList(request, aServe);
                                 destination = EDIT_ERROR;
-                                break OUTER;
+                                break;
                             }
                             String authorId = authorIds[0];
                             author = aServe.findByIdAndFetchBooksEagerly(authorId);
@@ -196,21 +198,21 @@ public class AuthorController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        try {
-//            processRequest(request, response);
-//
-//        } catch (SQLException ex) {
-//            Logger.getLogger(AuthorController.class
-//                    .getName()).log(Level.SEVERE, null, ex);
-//
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(AuthorController.class
-//                    .getName()).log(Level.SEVERE, null, ex);
-//
-//        } catch (Exception ex) {
-//            Logger.getLogger(AuthorController.class
-//                    .getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            processRequest(request, response);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(AuthorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AuthorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
+        } catch (Exception ex) {
+            Logger.getLogger(AuthorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -224,21 +226,21 @@ public class AuthorController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        try {
-//            processRequest(request, response);
-//
-//        } catch (SQLException ex) {
-//            Logger.getLogger(AuthorController.class
-//                    .getName()).log(Level.SEVERE, null, ex);
-//
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(AuthorController.class
-//                    .getName()).log(Level.SEVERE, null, ex);
-//
-//        } catch (Exception ex) {
-//            Logger.getLogger(AuthorController.class
-//                    .getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            processRequest(request, response);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(AuthorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AuthorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
+        } catch (Exception ex) {
+            Logger.getLogger(AuthorController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
