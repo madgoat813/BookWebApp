@@ -35,8 +35,8 @@ public class BookController extends HttpServlet {
 
     private static final String NO_PARAM_ERR_MSG = "No request parameter identified";
     private static final String LIST_PAGE = "/listBooks.jsp";
-    private static final String ADD_PAGE = "/bookAddPage.jsp";
-    private static final String EDIT_PAGE = "/bookEditPage.jsp";
+    private static final String ADD_PAGE = "/addBookPage.jsp";
+    private static final String EDIT_PAGE = "/editBookPage.jsp";
     private static final String EDIT_ERROR = "/testPage.jsp";
     private static final String LIST_ACTION = "list";
     private static final String ADD_EDIT_DELETE_ACTION = "addEditDelete";
@@ -147,19 +147,19 @@ public class BookController extends HttpServlet {
                     this.refreshAuthorList(request, aServe);
                     destination = LIST_PAGE;
                     break;
-//                case ADD_ACTION:
-//                    String bName = request.getParameter("bookName");
-//                    String bIsbn = request.getParameter("isbn");
-//                    String bAuthorId = request.getParameter("authorId");
-//                    book = new Book();
-//                    book.setBookName(bName);
-//                    book.setIsbn(bIsbn);
-//                    book.setAuthorId(new Author(Integer.parseInt(bAuthorId)));
-//                    bServe.create(book);
-//                    this.refreshBookList(request, bServe);
-//                    this.refreshAuthorList(request, aServe);
-//                    destination = LIST_PAGE;
-//                    break;
+                case ADD_ACTION:
+                    String bName = request.getParameter("bookName");
+                    String bIsbn = request.getParameter("isbn");
+                    String bAuthorId = request.getParameter("authorId");
+                    book = new Book();
+                    book.setBookName(bName);
+                    book.setIsbn(bIsbn);
+                    book.setAuthorId(new Author(Integer.parseInt(bAuthorId)));
+                    bServe.edit(book);
+                    this.refreshBookList(request, bServe);
+                    this.refreshAuthorList(request, aServe);
+                    destination = LIST_PAGE;
+                    break;
                 case CANCEL_ACTION:
                     this.refreshBookList(request, bServe);
                     this.refreshAuthorList(request, aServe);

@@ -19,7 +19,7 @@
               crossorigin="anonymous">
     </head>
     <body>
-        <form method="POST" action="AuthorController?action=addEditDelete">
+        <form method="POST" action="BookController?action=addEditDelete">
             <br/>
             <div class="alert alert-info" role="alert">All Books</div>
             <table class="table">
@@ -35,10 +35,10 @@
                 <thead><td>ID</td><td>Name</td><td>Isbn</td><td>Author Id</td></thead>
                 <c:forEach var="i" items="${books}" >
                     <tr>
-                        <td><input type="checkbox" name="authorId" value="${i.bookId}" /></td>
+                        <td><input type="checkbox" name="bookId" value="${i.bookId}" /></td>
                         <td>${ i.bookName }</td>
                         <td>${ i.isbn }</td>
-                        <td>${ i.authorId }</td>
+                        <td>${ i.authorId.authorName }</td>
                     </c:forEach>
             </table>
             <div class="col-md-2">

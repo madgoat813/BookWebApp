@@ -8,6 +8,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -23,33 +24,45 @@
             <br/>
             <div class="alert alert-info" role="alert">All Authors</div>
             <table class="table">
+                <sec:authorize access="hasAnyRole('ROLE_MGR')">
                 <div class="col-md-2">
                     <input type="submit" class="btn btn-primary" value="new" name="submit">
                 </div>
+                </sec:authorize>
+                <sec:authorize access="hasAnyRole('ROLE_MGR')">
                 <div class="col-md-5">
                     <input type="submit" class="btn btn-warning" value="edit" name="submit">
                 </div>
+                </sec:authorize>
+                <sec:authorize access="hasAnyRole('ROLE_MGR')">
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-danger" value="delete" name="submit">
                 </div>
+                </sec:authorize>
                 <thead><td>ID</td><td>Name</td><td>Date Added</td></thead>
                 <c:forEach var="i" items="${authors}" >
                     <tr>
                         <td><input type="checkbox" name="authorId" value="${i.authorId}" /></td>
                         <td>${ i.authorName }</td>
                         <td>${ i.dateAdded }</td>
-                        <td>${ authors }</td>
+                        <!--td>${ authors }</td-->
                     </c:forEach>
             </table>
-            <div class="col-md-2">
-                <input type="submit" class="btn btn-primary" value="new" name="submit">
-            </div>
-            <div class="col-md-5">
-                <input type="submit" class="btn btn-warning" value="edit" name="submit">
-            </div>
-            <div class="col-md-1">
-                <input type="submit" class="btn btn-danger" value="delete" name="submit">
-            </div>
+            <sec:authorize access="hasAnyRole('ROLE_MGR')">
+                <div class="col-md-2">
+                    <input type="submit" class="btn btn-primary" value="new" name="submit">
+                </div>
+                </sec:authorize>
+                <sec:authorize access="hasAnyRole('ROLE_MGR')">
+                <div class="col-md-5">
+                    <input type="submit" class="btn btn-warning" value="edit" name="submit">
+                </div>
+                </sec:authorize>
+                <sec:authorize access="hasAnyRole('ROLE_MGR')">
+                <div class="col-md-1">
+                    <input type="submit" class="btn btn-danger" value="delete" name="submit">
+                </div>
+                </sec:authorize>
         </form>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" 
                 integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo= sha512-2e8qq0ETcfWRI4HJBzQiA3UoyFk6tbNyG+qSaIBZLyW9Xf3sWZHN/lxe9fTh1U45DpPf07yj94KsUHHWe4Yk1A==" 
