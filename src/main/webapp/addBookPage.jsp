@@ -16,6 +16,7 @@
               crossorigin="anonymous">
     </head>
     <body>
+        <jsp:include page="header.jsp"/>
         <form method="POST" action="BookController" class="col-md-4">
             <br/>
             <div class="alert alert-info" role="alert">Add Book</div>

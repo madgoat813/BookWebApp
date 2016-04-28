@@ -16,6 +16,7 @@
               crossorigin="anonymous">
     </head>
     <body>
+        <jsp:include page="header.jsp"/>
         <h1>Error</h1>
         <h3>Please select an author to edit</h3>
         <a href="AuthorController?action=list"><button class="btn btn-primary">Back to Author List</button></a>

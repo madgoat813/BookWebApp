@@ -19,6 +19,7 @@
               crossorigin="anonymous">
     </head>
     <body>
+        <jsp:include page="header.jsp"/>
         <form method="POST" action="BookController?action=addEditDelete">
             <br/>
             <div class="alert alert-info" role="alert">All Books</div>

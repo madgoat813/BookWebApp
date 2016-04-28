@@ -17,6 +17,7 @@
               crossorigin="anonymous">
     </head>
     <body>
+        <jsp:include page="header.jsp"/>
         <h1>Edit Author Name</h1>
 
         <form method="POST" action="AuthorController" class="col-md-4">

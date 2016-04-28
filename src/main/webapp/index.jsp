@@ -20,6 +20,7 @@
               crossorigin="anonymous">
     </head>
     <body>
+        <jsp:include page="header.jsp"/>
         <form method="POST" action="AuthorController?action=addEditDelete">
             <br/>
             <div class="alert alert-info" role="alert">All Authors</div>

@@ -17,6 +17,7 @@
     </head>
 
     <body>
+        <jsp:include page="header.jsp"/>
 
 
         <h3 style="font-weight: 200;color: #ffc400;">Ooops! Sorry partner, but there's a problem...</h3>
