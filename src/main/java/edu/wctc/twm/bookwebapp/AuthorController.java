@@ -75,12 +75,12 @@ public class AuthorController extends HttpServlet {
         String destination = LIST_PAGE;
         String action = request.getParameter(ACTION_PARAM);
 
-        // use init parameters to config database connection
-        //configDbConnection();
+////         use init parameters to config database connection
+//        configDbConnection();
 
         try {
             // use init parameters to config database connection
-            //configDbConnection();
+//            configDbConnection();
             
             OUTER:
             switch (action) {
