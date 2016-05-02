@@ -147,19 +147,19 @@ public class BookController extends HttpServlet {
                     this.refreshAuthorList(request, aServe);
                     destination = LIST_PAGE;
                     break;
-//                case ADD_ACTION:
-//                    String bName = request.getParameter("bookName");
-//                    String bIsbn = request.getParameter("isbn");
-//                    String bAuthorId = request.getParameter("authorId");
-//                    book = new Book();
-//                    book.setBookName(bName);
-//                    book.setIsbn(bIsbn);
-//                    book.setAuthorId(new Author(Integer.parseInt(bAuthorId)));
-//                    bServe.create(book);
-//                    this.refreshBookList(request, bServe);
-//                    this.refreshAuthorList(request, aServe);
-//                    destination = LIST_PAGE;
-//                    break;
+                case ADD_ACTION:
+                    String bName = request.getParameter("bookName");
+                    String bIsbn = request.getParameter("isbn");
+                    String bAuthorId = request.getParameter("authorId");
+                    book = new Book();
+                    book.setBookName(bName);
+                    book.setIsbn(bIsbn);
+                    book.setAuthorId(new Author(Integer.parseInt(bAuthorId)));
+                    bServe.edit(book);
+                    this.refreshBookList(request, bServe);
+                    this.refreshAuthorList(request, aServe);
+                    destination = LIST_PAGE;
+                    break;
                 case CANCEL_ACTION:
                     this.refreshBookList(request, bServe);
                     this.refreshAuthorList(request, aServe);

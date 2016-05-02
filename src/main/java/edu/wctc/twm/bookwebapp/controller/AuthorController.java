@@ -12,6 +12,7 @@ import edu.wctc.twm.bookwebapp.service.AuthorService;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -142,13 +143,13 @@ public class AuthorController extends HttpServlet {
                     destination = LIST_PAGE;
                     break;
                 case ADD_ACTION:
-//                    String aName = request.getParameter("authorName");
-//                    author = new Author();
-//                    author.setAuthorName(aName);
-//                    author.setDateAdded(new Date());
-//                    aServe.create(author);
-//                    this.refreshList(request, aServe);
-//                    destination = LIST_PAGE;
+                    String aName = request.getParameter("authorName");
+                    author = new Author();
+                    author.setAuthorName(aName);
+                    author.setDateAdded(new Date());
+                    aServe.edit(author);
+                    this.refreshList(request, aServe);
+                    destination = LIST_PAGE;
                     break;
                 case CANCEL_ACTION:
                     this.refreshList(request, aServe);
