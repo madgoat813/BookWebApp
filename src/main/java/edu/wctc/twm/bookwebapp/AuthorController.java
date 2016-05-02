@@ -72,7 +72,7 @@ public class AuthorController extends HttpServlet {
         String action = request.getParameter(ACTION_PARAM);
 
         // use init parameters to config database connection
-        configDbConnection();
+//        configDbConnection();
 
         try {
             // use init parameters to config database connection
@@ -155,13 +155,13 @@ public class AuthorController extends HttpServlet {
     }
 
     private void configDbConnection() throws NamingException, ClassNotFoundException, SQLException {
-        if (dbJndiName == null) {
-            aServe.getDao().initDao(driverClass, url, userName, password);
-        } else {
+//        if (dbJndiName == null) {
+//            aServe.getDao().initDao(driverClass, url, userName, password);
+//        } else {
             Context ctx = new InitialContext();
             DataSource ds = (DataSource) ctx.lookup(dbJndiName);
             aServe.getDao().initDao(ds);
-        }
+//        }
     }
 
     private void refreshList(HttpServletRequest request, AuthorService aServe) throws Exception {
